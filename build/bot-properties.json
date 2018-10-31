@@ -1,0 +1,6 @@
+{
+    "SERVER":"irc.sageru.org",
+    "NICK":"Verniy-Bot",
+    "CHANNELS": ["#qa", "#test"],
+    "SERVER-PORT":"6667"
+}
