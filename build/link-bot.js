@@ -20,8 +20,14 @@ class Main {
         linkifier_bot.addListener('message', (sender, channel, text, message_obj) => {
             // console.log(message_obj);
             switch(text){
-                case "!YTBot": 
+                case "!YTBot -v": 
                 linkifier_bot.say(channel, "IRC-YouTube-Bot V0.1 - @Verniy\nhttps://github.com/ECHibiki/IRC-YouTube-Bot");
+                break;
+                case "!YTBot -h": 
+                linkifier_bot.say(channel, "Enter a YouTube link and this bot will output the details.");
+                break;
+                case "!YTBot": 
+                linkifier_bot.say(channel, "!YTBot -v : Output version info\n!YTBot -h : Output help info");
                 break;
             }       
         });
