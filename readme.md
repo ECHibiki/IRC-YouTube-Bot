@@ -10,6 +10,9 @@ Done with an IDE of Visual Studio Code. <br/>
  <tr>
   <td>!YTBot -v</td> <td> Output version info</td> 
  </tr>
+   <tr>
+  <td>!YTBot -h</td> <td> Output information on bot</td> 
+ </tr>
   <tr>
   <td>!YTBot</td> <td> Output Commands</td> 
  </tr>
