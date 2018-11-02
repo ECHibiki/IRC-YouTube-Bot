@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "irc": "^0.5.2"
+    "googleapis": "^24.0.0",
+    "irc": "^0.5.2",
+    "youtube-api": "^2.0.9"
   }
 }
