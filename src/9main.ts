@@ -1,5 +1,3 @@
-
-
 class Main{
 
     static data_constants:any;
@@ -62,5 +60,4 @@ class Main{
         console.log("Bot Listening");
     }
 }
-
 Main.init();

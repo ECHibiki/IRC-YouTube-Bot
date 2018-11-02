@@ -31,6 +31,4 @@ class DetailsFetcher{
         YouTubeFunctions.videosListMultipleIds(JSON.parse(this.fs.readFileSync("youtube-api-keys.json"))["API-KEY"], paramter_obj , print_function, sender);
 
     }
-
-
 }
