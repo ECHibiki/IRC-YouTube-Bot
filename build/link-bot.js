@@ -95,7 +95,7 @@ class Main {
                     Main.linkifier_bot.say(channel, "!YTBot -v : Output version info\n!YTBot -h : Output help info");
                     break;
                 default:
-                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=&]+|youtu\.be\/[\w?=&]+)\b/gu;
+                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=\-&]+|youtu\.be\/[\w?=&\-]+)\b/gu;
                     if (reg_pag.test(text)) {
                         // Main.linkifier_bot.say(channel, "!YTBot: Recieved");
                         this.details_fetcher.fetchYoutubeDetails(text.match(reg_pag), Main.displayYouTubeDetails, channel);
