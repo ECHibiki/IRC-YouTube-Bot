@@ -95,7 +95,7 @@ class Main {
                     Main.linkifier_bot.say(channel, "!YTBot -v : Output version info\n!YTBot -h : Output help info");
                     break;
                 default:
-                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=\-&]+|youtu\.be\/[\w?=&\-]+)\b/gu;
+                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
                     if (reg_pag.test(text)) {
                         // Main.linkifier_bot.say(channel, "!YTBot: Recieved");
                         this.details_fetcher.fetchYoutubeDetails(text.match(reg_pag), Main.displayYouTubeDetails, channel);
@@ -110,8 +110,8 @@ class Main {
             Main.linkifier_bot.say(channel, "!YTBot: Nice YouTube link");
         }
         details_obj.items.forEach((details, ind) => {
-            console.log(ind, details.snippet.title);
-            Main.linkifier_bot.say(channel, details.snippet.title);
+            console.log(ind, details);
+            Main.linkifier_bot.say(channel, details.snippet.title + " [" + details.snippet.channelTitle + "]");
         });
     }
     static init() {
