@@ -45,11 +45,11 @@ class Main{
 
     static displayYouTubeDetails(details_obj:any, channel:string){
         if(details_obj == "" || details_obj.items.length == 0){
-            console.log(details_obj)
+            console.log("Failed");
             Main.linkifier_bot.say(channel, "!YTBot: Nice YouTube link");
         }
         details_obj.items.forEach((details:any, ind:number)=>{
-            console.log(ind,details);
+            console.log(ind,channel,details.snippet.title + " [" + details.snippet.channelTitle + "]");
             Main.linkifier_bot.say(channel,details.snippet.title + " [" + details.snippet.channelTitle + "]");
         });
     }

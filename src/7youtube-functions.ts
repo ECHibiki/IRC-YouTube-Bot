@@ -18,11 +18,9 @@ class YouTubeFunctions{
     static videosListMultipleIds(auth:any, parameters:any, print_function:Function, sender:string) {
         var service = YouTubeFunctions.google.youtube('v3');
         parameters['auth'] = auth;
-        console.log(parameters);    
         service.videos.list(parameters, (err:any, response:any) => {
           if (err) {
             print_function("", sender);
-            console.log('miss-vlmi');
             return;
           }
           print_function(response, sender);
@@ -30,7 +28,6 @@ class YouTubeFunctions{
       }
 
       static getYouTubeID(youtube_url:string):string{
-          console.log(youtube_url);
         if(/youtube/.test(youtube_url)){
             var low_trim = youtube_url.lastIndexOf('v=') + 2;
             var high_trim = youtube_url.indexOf('&', low_trim);

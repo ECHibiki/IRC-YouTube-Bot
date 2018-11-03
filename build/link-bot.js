@@ -6,18 +6,15 @@ class YouTubeFunctions {
     static videosListMultipleIds(auth, parameters, print_function, sender) {
         var service = YouTubeFunctions.google.youtube('v3');
         parameters['auth'] = auth;
-        console.log(parameters);
         service.videos.list(parameters, (err, response) => {
             if (err) {
                 print_function("", sender);
-                console.log('miss-vlmi');
                 return;
             }
             print_function(response, sender);
         });
     }
     static getYouTubeID(youtube_url) {
-        console.log(youtube_url);
         if (/youtube/.test(youtube_url)) {
             var low_trim = youtube_url.lastIndexOf('v=') + 2;
             var high_trim = youtube_url.indexOf('&', low_trim);
@@ -54,7 +51,6 @@ class DetailsFetcher {
     fetchYoutubeDetails(url_array, print_function, sender) {
         if (url_array == null) {
             print_function("", sender);
-            console.log('fyd');
             return;
         }
         var paramter_obj = { 'id': "",
@@ -106,11 +102,11 @@ class Main {
     }
     static displayYouTubeDetails(details_obj, channel) {
         if (details_obj == "" || details_obj.items.length == 0) {
-            console.log(details_obj);
+            console.log("Failed");
             Main.linkifier_bot.say(channel, "!YTBot: Nice YouTube link");
         }
         details_obj.items.forEach((details, ind) => {
-            console.log(ind, details);
+            console.log(ind, channel, details.snippet.title + " [" + details.snippet.channelTitle + "]");
             Main.linkifier_bot.say(channel, details.snippet.title + " [" + details.snippet.channelTitle + "]");
         });
     }

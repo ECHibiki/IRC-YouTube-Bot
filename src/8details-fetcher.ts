@@ -11,7 +11,6 @@ class DetailsFetcher{
     fetchYoutubeDetails(url_array:RegExpMatchArray|null, print_function:Function, sender:string):void{
         if(url_array == null) {
             print_function("", sender);
-            console.log('fyd');
             return;
         }
 
