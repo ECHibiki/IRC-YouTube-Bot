@@ -71,18 +71,23 @@ class DetailsFetcher {
             print_function("", sender);
             return;
         }
-        console.log(url_array);
         url_array.forEach((url, index) => {
-            console.log(url);
             if (url == "") {
                 url_array.splice(index, 1);
                 return;
             }
-            console.log("___");
             var title_rgx = /< *title *> *(.|[\r\n])+ *< *\/ *title *>/ugm;
+            var img_rgx = /^.*(\.jpg|\.png)$/ugm;
+            var vid_rgx = /^.*(\.webm|\.gif)$/ugm;
             this.request(url, (error, response, html) => {
                 var title_arr = html.match(title_rgx);
                 if (title_arr == null) {
+                    if (img_rgx.test(url)) {
+                        print_function("Image File", sender);
+                    }
+                    else if (vid_rgx.test(url)) {
+                        print_function("Video File", sender);
+                    }
                     return;
                 }
                 var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
