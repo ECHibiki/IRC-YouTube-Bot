@@ -77,10 +77,13 @@ class DetailsFetcher {
                 return;
             }
             var title_rgx = /< *title *> *(.|[\r\n])+ *< *\/ *title *>/ugm;
-            var img_rgx = /^.*(\.jpg|\.png)$/ugm;
-            var vid_rgx = /^.*(\.webm|\.gif)$/ugm;
+            var img_rgx = /^.*(\.jpg|\.png|\.bmp)($|\?)/ugm;
+            var vid_rgx = /^.*(\.webm|\.gif|\.mp4)($|\?)/ugm;
             this.request(url, (error, response, html) => {
-                var title_arr = html.match(title_rgx);
+                var title_arr;
+                if (html != undefined) {
+                    title_arr = html.match(title_rgx);
+                }
                 if (title_arr == null) {
                     if (img_rgx.test(url)) {
                         print_function("Image File", sender);
@@ -88,9 +91,16 @@ class DetailsFetcher {
                     else if (vid_rgx.test(url)) {
                         print_function("Video File", sender);
                     }
+                    else {
+                        print_function("Could not Determine", sender);
+                    }
                     return;
                 }
                 var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
+                console.log(Main.data_constants["LINKCUTOFF"]);
+                if (title.length > Main.data_constants["LINKCUTOFF"]) {
+                    title = title.substr(0, Main.data_constants["LINKCUTOFF"]) + "...";
+                }
                 print_function(title, sender);
             });
         });
