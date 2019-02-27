@@ -36,11 +36,18 @@ class Main{
                     + " Output version info\n " + Main.irc.colors.wrap("dark_blue", "!YTBot -h :") 
                     + " Output help info");
                     break;
+                case "#kissu": 
+                    Main.linkifier_bot.say(channel, Main.irc.colors.wrap("dark_blue", "!YTBot Active"));
+                        break;
                 default:
-                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
-                    if(reg_pag.test(text)){
+                    var reg_pat_youtube = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
+                    var reg_pat_url = /\b(http[s]{0,1}:\/\/[\w?=\-&_\.]+\.[\w?=\-&_\.\/]+)\b/gu;
+                    if(reg_pat_youtube.test(text)){
                         // Main.linkifier_bot.say(channel, "!YTBot: Recieved");
-                        this.details_fetcher.fetchYoutubeDetails(text.match(reg_pag), Main.displayYouTubeDetails, channel);
+                        this.details_fetcher.fetchYoutubeDetails(text.match(reg_pat_youtube), Main.displayYouTubeDetails, channel);
+                    }
+                    else if(reg_pat_url.test(text)){
+                        this.details_fetcher.fetchLinkDetails(text.match(reg_pat_url), Main.displayLinkDetails, channel);
                     }
                     break;
             }       
@@ -59,9 +66,14 @@ class Main{
         }
         details_obj.items.forEach((details:any, ind:number)=>{
             console.log(ind,channel,details.snippet.title + " [" + details.snippet.channelTitle + "]");
-            Main.linkifier_bot.say(channel, Main.irc.colors.wrap("magenta",details.snippet.title)
+            Main.linkifier_bot.say(channel, Main.irc.colors.wrap("dark_red",details.snippet.title)
                 + Main.irc.colors.wrap("dark_green"," [" + details.snippet.channelTitle + "]"));
         });
+    }
+
+    static displayLinkDetails(details:any, channel:string){
+        console.log(details, channel, " _");
+        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("light_magenta","[" + details + "]"));
     }
 
     static init():void{

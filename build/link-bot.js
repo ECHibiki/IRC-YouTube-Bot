@@ -44,6 +44,7 @@ YouTubeFunctions.TOKEN_PATH = YouTubeFunctions.TOKEN_DIR + 'youtube-nodejs-quick
 class DetailsFetcher {
     constructor() {
         this.http = require('http');
+        this.request = require('request');
         this.ulr = require('url');
         this.fs = require('fs');
         this.Youtube = require("youtube-api");
@@ -64,6 +65,30 @@ class DetailsFetcher {
         });
         paramter_obj.id = url_array.join(',');
         YouTubeFunctions.videosListMultipleIds(JSON.parse(this.fs.readFileSync("youtube-api-keys.json"))["API-KEY"], paramter_obj, print_function, sender);
+    }
+    fetchLinkDetails(url_array, print_function, sender) {
+        if (url_array == null) {
+            print_function("", sender);
+            return;
+        }
+        console.log(url_array);
+        url_array.forEach((url, index) => {
+            console.log(url);
+            if (url == "") {
+                url_array.splice(index, 1);
+                return;
+            }
+            console.log("___");
+            var title_rgx = /< *title *> *(.|[\r\n])+ *< *\/ *title *>/ugm;
+            this.request(url, (error, response, html) => {
+                var title_arr = html.match(title_rgx);
+                if (title_arr == null) {
+                    return;
+                }
+                var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
+                print_function(title, sender);
+            });
+        });
     }
 }
 class Main {
@@ -94,11 +119,18 @@ class Main {
                         + " Output version info\n " + Main.irc.colors.wrap("dark_blue", "!YTBot -h :")
                         + " Output help info");
                     break;
+                case "#kissu":
+                    Main.linkifier_bot.say(channel, Main.irc.colors.wrap("dark_blue", "!YTBot Active"));
+                    break;
                 default:
-                    var reg_pag = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
-                    if (reg_pag.test(text)) {
+                    var reg_pat_youtube = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
+                    var reg_pat_url = /\b(http[s]{0,1}:\/\/[\w?=\-&_\.]+\.[\w?=\-&_\.\/]+)\b/gu;
+                    if (reg_pat_youtube.test(text)) {
                         // Main.linkifier_bot.say(channel, "!YTBot: Recieved");
-                        this.details_fetcher.fetchYoutubeDetails(text.match(reg_pag), Main.displayYouTubeDetails, channel);
+                        this.details_fetcher.fetchYoutubeDetails(text.match(reg_pat_youtube), Main.displayYouTubeDetails, channel);
+                    }
+                    else if (reg_pat_url.test(text)) {
+                        this.details_fetcher.fetchLinkDetails(text.match(reg_pat_url), Main.displayLinkDetails, channel);
                     }
                     break;
             }
@@ -115,9 +147,13 @@ class Main {
         }
         details_obj.items.forEach((details, ind) => {
             console.log(ind, channel, details.snippet.title + " [" + details.snippet.channelTitle + "]");
-            Main.linkifier_bot.say(channel, Main.irc.colors.wrap("magenta", details.snippet.title)
+            Main.linkifier_bot.say(channel, Main.irc.colors.wrap("dark_red", details.snippet.title)
                 + Main.irc.colors.wrap("dark_green", " [" + details.snippet.channelTitle + "]"));
         });
+    }
+    static displayLinkDetails(details, channel) {
+        console.log(details, channel, " _");
+        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("light_magenta", "[" + details + "]"));
     }
     static init() {
         this.getConnectionProperties();
