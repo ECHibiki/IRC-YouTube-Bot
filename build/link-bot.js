@@ -87,10 +87,12 @@ class DetailsFetcher {
                 }
                 if (title_arr == null) {
                     if (img_rgx.test(url)) {
-                        print_function("Image File", sender);
+                        return;
+                        //print_function("Image File", sender);
                     }
                     else if (vid_rgx.test(url)) {
-                        print_function("Video File", sender);
+                        return;
+                        //print_function("Video File", sender);
                     }
                     else {
                         print_function("Could not Determine", sender);
