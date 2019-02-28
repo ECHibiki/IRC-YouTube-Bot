@@ -37,22 +37,38 @@ class DetailsFetcher{
             print_function("", sender);
             return;
         }
-        console.log(url_array)
         url_array.forEach((url:string, index:number)=>{
-            console.log(url)
             if(url == ""){
                 url_array.splice(index, 1);
                 return;
             }
-            console.log("___")
             var title_rgx = /< *title *> *(.|[\r\n])+ *< *\/ *title *>/ugm;
+            var img_rgx = /^.*(\.jpg|\.png|\.bmp)($|\?)/ugm;
+            var vid_rgx = /^.*(\.webm|\.gif|\.mp4)($|\?)/ugm;
             this.request(url, (error:any, response:any, html:string)=>{
-                var title_arr = html.match(title_rgx);
-                if(title_arr == null){
-                    return;
-                }
-                var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
-                print_function(title, sender);
+                    var title_arr;
+                    if(html != undefined){
+                        title_arr = html.match(title_rgx);
+                        console.log(url);
+                    }
+                    if(title_arr == null){
+                        if(img_rgx.test(url)){
+                            print_function("Image File", sender);
+                        }
+                        else if(vid_rgx.test(url)){
+                            print_function("Video File", sender);
+                        }
+                        else{
+                            print_function("Could not Determine", sender);
+                        }
+                        return;
+                    }
+                    var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
+                    console.log(Main.data_constants["LINKCUTOFF"]);
+                    if(title.length > Main.data_constants["LINKCUTOFF"]){
+                        title =  title.substr(0,Main.data_constants["LINKCUTOFF"]) + "...";
+                    }
+                    print_function(title, sender);
             });
         });
 

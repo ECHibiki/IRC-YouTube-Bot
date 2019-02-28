@@ -83,6 +83,7 @@ class DetailsFetcher {
                 var title_arr;
                 if (html != undefined) {
                     title_arr = html.match(title_rgx);
+                    console.log(url);
                 }
                 if (title_arr == null) {
                     if (img_rgx.test(url)) {
@@ -139,7 +140,7 @@ class Main {
                     break;
                 default:
                     var reg_pat_youtube = /\b(www\.youtube\.com\/watch\?[\w?=\-&_]+|youtu\.be\/[\w?=\-&_]+)\b/gu;
-                    var reg_pat_url = /\b(http[s]{0,1}:\/\/[\w?=\-&_\.]+\.[\w?=\-&_\.\/]+)\b/gu;
+                    var reg_pat_url = /\b(http[s]{0,1}:\/\/[\w?=\-&_%\.]+\.[\w?=\-&_%\.\/]+)\b/gu;
                     if (reg_pat_youtube.test(text)) {
                         // Main.linkifier_bot.say(channel, "!YTBot: Recieved");
                         this.details_fetcher.fetchYoutubeDetails(text.match(reg_pat_youtube), Main.displayYouTubeDetails, channel);
@@ -168,7 +169,7 @@ class Main {
     }
     static displayLinkDetails(details, channel) {
         console.log(details, channel, " _");
-        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("light_magenta", "[" + details + "]"));
+        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("gray", "<" + details + ">"));
     }
     static init() {
         this.getConnectionProperties();
