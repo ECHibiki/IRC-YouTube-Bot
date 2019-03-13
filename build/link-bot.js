@@ -64,7 +64,7 @@ class DetailsFetcher {
             url_array[index] = YouTubeFunctions.getYouTubeID(url);
         });
         paramter_obj.id = url_array.join(',');
-        YouTubeFunctions.videosListMultipleIds(JSON.parse(this.fs.readFileSync("youtube-api-keys.json"))["API-KEY"], paramter_obj, print_function, sender);
+        YouTubeFunctions.videosListMultipleIds(JSON.parse(this.fs.readFileSync(__dirname + "/youtube-api-keys.json"))["API-KEY"], paramter_obj, print_function, sender);
     }
     fetchLinkDetails(url_array, print_function, sender) {
         if (url_array == null) {
@@ -76,7 +76,7 @@ class DetailsFetcher {
                 url_array.splice(index, 1);
                 return;
             }
-            var title_rgx = /< *title *> *(.|[\r\n])+ *< *\/ *title *>/ugm;
+            var title_rgx = /< *title[^>]*> *([^<>]|[\r\n])+ *< *\/title[^>]*>/ugm;
             var img_rgx = /^.*(\.jpg|\.png|\.bmp)($|\?)/ugm;
             var vid_rgx = /^.*(\.webm|\.gif|\.mp4)($|\?)/ugm;
             this.request(url, (error, response, html) => {
@@ -99,7 +99,11 @@ class DetailsFetcher {
                     }
                     return;
                 }
-                var title = (title_arr[0].replace(/(\n|< *title *>|< *\/ *title *>)/ugm, "")).trim();
+                var title = (title_arr[0].replace(/(\n|<[^<]*title[^>]*>|<[^<]*\/title[^>]*>)/ugm, "")).trim();
+                title = title.replace(/(&#60;|&lt;)/, "<");
+                title = title.replace(/(&#62;|&gt;)/, ">");
+                title = title.replace(/&#x27;/, "'");
+                title = title.replace(/&amp;/, "&");
                 console.log(Main.data_constants["LINKCUTOFF"]);
                 if (title.length > Main.data_constants["LINKCUTOFF"]) {
                     title = title.substr(0, Main.data_constants["LINKCUTOFF"]) + "...";
@@ -113,7 +117,7 @@ class Main {
     static getConnectionProperties() {
         console.log("Reading Constants");
         var fs = require('fs');
-        this.data_constants = JSON.parse(fs.readFileSync('bot-properties.json', 'utf8'));
+        this.data_constants = JSON.parse(fs.readFileSync(__dirname + '/bot-properties.json', 'utf8'));
     }
     static initBot() {
         console.log("Initializing Bot");

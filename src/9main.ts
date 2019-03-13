@@ -8,7 +8,7 @@ class Main{
     static getConnectionProperties(){
         console.log("Reading Constants");
         var fs = require('fs');
-        this.data_constants = JSON.parse(fs.readFileSync('bot-properties.json','utf8'));
+        this.data_constants = JSON.parse(fs.readFileSync(__dirname + '/bot-properties.json','utf8'));
     }
 
     static initBot(){
