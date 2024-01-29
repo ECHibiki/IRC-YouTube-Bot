@@ -1,52 +1,11 @@
 "use strict";
-//based on https://github.com/youtube/api-samples/blob/master/javascript/nodejs-quickstart.js
-//with user typescript and edits for syncronous use in project
-class YouTubeFunctions {
-    //https://developers.google.com/youtube/v3/docs/videos/list#request
-    static videosListMultipleIds(auth, parameters, print_function, sender) {
-        var service = YouTubeFunctions.google.youtube('v3');
-        parameters['auth'] = auth;
-        service.videos.list(parameters, (err, response) => {
-            if (err) {
-                print_function("", sender);
-                return;
-            }
-            print_function(response, sender);
-        });
-    }
-    static getYouTubeID(youtube_url) {
-        if (/youtube/.test(youtube_url)) {
-            var low_trim = youtube_url.lastIndexOf('v=') + 2;
-            var high_trim = youtube_url.indexOf('&', low_trim);
-            high_trim = high_trim > -1 ? high_trim : youtube_url.length;
-            return youtube_url.substring(low_trim, high_trim);
-        }
-        else if (/youtu\.be/.test(youtube_url)) {
-            var low_trim = youtube_url.lastIndexOf('/') + 1;
-            var high_trim = youtube_url.indexOf('?', low_trim);
-            high_trim = high_trim > -1 ? high_trim : youtube_url.length;
-            return youtube_url.substring(low_trim, high_trim);
-        }
-        else
-            return "";
-    }
-}
-YouTubeFunctions.fs = require('fs');
-YouTubeFunctions.readline = require('readline');
-YouTubeFunctions.google = require('googleapis');
-YouTubeFunctions.OAuth2 = YouTubeFunctions.google.auth.OAuth2;
-// If modifying these scopes, delete your previously saved credentials
-// at ~/.credentials/youtube-nodejs-quickstart.json
-YouTubeFunctions.SCOPES = ['https://www.googleapis.com/auth/youtube.readonly'];
-YouTubeFunctions.TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.credentials/';
-YouTubeFunctions.TOKEN_PATH = YouTubeFunctions.TOKEN_DIR + 'youtube-nodejs-quickstart.json';
 class DetailsFetcher {
     constructor() {
         this.http = require('http');
         this.request = require('request');
         this.ulr = require('url');
         this.fs = require('fs');
+        this.he = require('html-entities');
         this.Youtube = require("youtube-api");
     }
     fetchYoutubeDetails(url_array, print_function, sender) {
@@ -100,10 +59,7 @@ class DetailsFetcher {
                     return;
                 }
                 var title = (title_arr[0].replace(/(\n|<[^<]*title[^>]*>|<[^<]*\/title[^>]*>)/ugm, "")).trim();
-                title = title.replace(/(&#60;|&lt;)/, "<");
-                title = title.replace(/(&#62;|&gt;)/, ">");
-                title = title.replace(/&#x27;/, "'");
-                title = title.replace(/&amp;/, "&");
+                title = this.he.decode(title);
                 console.log(Main.data_constants["LINKCUTOFF"]);
                 if (title.length > Main.data_constants["LINKCUTOFF"]) {
                     title = title.substr(0, Main.data_constants["LINKCUTOFF"]) + "...";
@@ -186,4 +142,46 @@ class Main {
 Main.irc = require("irc");
 Main.details_fetcher = new DetailsFetcher();
 Main.init();
+//based on https://github.com/youtube/api-samples/blob/master/javascript/nodejs-quickstart.js
+//with user typescript and edits for syncronous use in project
+class YouTubeFunctions {
+    //https://developers.google.com/youtube/v3/docs/videos/list#request
+    static videosListMultipleIds(auth, parameters, print_function, sender) {
+        var service = YouTubeFunctions.google.youtube('v3');
+        parameters['auth'] = auth;
+        service.videos.list(parameters, (err, response) => {
+            if (err) {
+                print_function("", sender);
+                return;
+            }
+            print_function(response, sender);
+        });
+    }
+    static getYouTubeID(youtube_url) {
+        if (/youtube/.test(youtube_url)) {
+            var low_trim = youtube_url.lastIndexOf('v=') + 2;
+            var high_trim = youtube_url.indexOf('&', low_trim);
+            high_trim = high_trim > -1 ? high_trim : youtube_url.length;
+            return youtube_url.substring(low_trim, high_trim);
+        }
+        else if (/youtu\.be/.test(youtube_url)) {
+            var low_trim = youtube_url.lastIndexOf('/') + 1;
+            var high_trim = youtube_url.indexOf('?', low_trim);
+            high_trim = high_trim > -1 ? high_trim : youtube_url.length;
+            return youtube_url.substring(low_trim, high_trim);
+        }
+        else
+            return "";
+    }
+}
+YouTubeFunctions.fs = require('fs');
+YouTubeFunctions.readline = require('readline');
+YouTubeFunctions.google = require('googleapis');
+YouTubeFunctions.OAuth2 = YouTubeFunctions.google.auth.OAuth2;
+// If modifying these scopes, delete your previously saved credentials
+// at ~/.credentials/youtube-nodejs-quickstart.json
+YouTubeFunctions.SCOPES = ['https://www.googleapis.com/auth/youtube.readonly'];
+YouTubeFunctions.TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
+    process.env.USERPROFILE) + '/.credentials/';
+YouTubeFunctions.TOKEN_PATH = YouTubeFunctions.TOKEN_DIR + 'youtube-nodejs-quickstart.json';
 //# sourceMappingURL=link-bot.js.map
