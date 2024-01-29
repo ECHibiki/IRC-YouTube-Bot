@@ -67,13 +67,14 @@ class Main{
         details_obj.items.forEach((details:any, ind:number)=>{
             console.log(ind,channel,details.snippet.title + " [" + details.snippet.channelTitle + "]");
             Main.linkifier_bot.say(channel, Main.irc.colors.wrap("dark_red",details.snippet.title)
-                + Main.irc.colors.wrap("dark_green"," [" + details.snippet.channelTitle + "]"));
+                + Main.irc.colors.wrap("dark_green", " [" + details.snippet.channelTitle + "]")
+                + Main.irc.colors.wrap("white", " @ kissu.moe"));
         });
     }
 
     static displayLinkDetails(details:any, channel:string){
         console.log(details, channel, " _");
-        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("gray","<" + details + ">"));
+        Main.linkifier_bot.say(channel, Main.irc.colors.wrap("gray","<" + details + ">") + Main.irc.colors.wrap("white", " @ kissu.moe"));
     }
 
     static init():void{
